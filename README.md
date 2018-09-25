@@ -1,4 +1,5 @@
-# AndroidApp
+<!-- used html for logo object instead since you can't ajust size of a markdown img -->
+<img src="/project-resources/img/banner.png" alt="God's Eye Logo" height="150px" /><br><br>
 
 This is the repo for Gods Eye android app. It contains everything you need
 to modify and re-compile the app. The code can be found in `www/` and instructions
