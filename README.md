@@ -11,8 +11,7 @@ Clone the repo: `git clone https://github.com/Gods-Eye-BTH/AndroidApp.git`
 
 download node modules: `npm install`
 
-add the desired platforms: `cordova platform add --save <platform>`  
-with <platform> being either `browser` or `android`
+prepare the cordova dependencies with `cordova prepare`
 
 run the app to a connected android device: `cordova run android --device`
 
