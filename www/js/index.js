@@ -37,9 +37,7 @@
     // General function that changes the state of the app,
     // usually it means a new view is displayed.
     const updateState = (newState) => {
-        console.log("want: ", newState);
         appState.state = newState;
-        console.log(appState);
         //redraw the view
         display();
     }
@@ -152,6 +150,10 @@
                         url: appState.selectedStream
                     });
                     flvPlayer.attachMediaElement(videoElement);
+                    // If there is any issue we'll tell the user
+                    flvPlayer.on(flvjs.Events.ERROR, () => {
+                        streamElement.setAttribute("poster", "img/streamError.png");
+                    });
                     flvPlayer.load();
                     flvPlayer.play();
                 } else {
