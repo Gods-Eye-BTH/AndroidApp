@@ -1,6 +1,11 @@
 "use strict";
 
 (function () {
+    //NOTE: This is the config variable, all default values are stored here
+    // this should remain static
+    const config = {
+        defaultStream: 'http://localhost:8000/live/eye.flv'
+    }
     // This is the root DOM Element - everything should be within this.
     let appElement = document.getElementById("app");
     // AppState tells the app what states are set.
@@ -9,7 +14,7 @@
     // selectedRobot: id of the robot the user has selected.
     let appState = {
         state: "home",
-        selectedStream: "",
+        selectedStream: config.defaultStream,
         selectedRobot: "",
     };
 
@@ -32,9 +37,7 @@
     // General function that changes the state of the app,
     // usually it means a new view is displayed.
     const updateState = (newState) => {
-        console.log("want: ", newState);
         appState.state = newState;
-        console.log(appState);
         //redraw the view
         display();
     }
@@ -108,11 +111,55 @@
             // STREAM VIEW
             case "stream":
                 let streamHeader = createElement("h1", "testheader");
+                let streamElement = createElement("video", "videoElement");
+                let dataWrap = createElement("div", "dataBoxWrap", "boxContainer");
+                let dataDropdown = createElement("div", "dropdownContainer", "dropdownContainer");
+                let dataBoxes = createElement("div", "dataBoxes", "boxWrap");
+                let dataBoxRobots = createElement("div", "robotsBox", "databox");
+                let dataBoxBarriers = createElement("div", "barriersBox", "databox");
 
+                //Add properties to the stream element
+                streamElement.setAttribute("muted", "");
+                streamElement.setAttribute("autoplay", "");
+                streamElement.setAttribute("poster", "img/loadingStream.png");
+
+                //add data to databoxes
+                dataBoxRobots.innerHTML = "<h2>3</h2><span>Robots</span>";
+                dataBoxBarriers.innerHTML = "<h2>4</h2><span>Barriers</span>";
+                dataDropdown.innerHTML = "<select><option>Camera 1</option></select>";
+
+                //change navbar active state and add the navbar
                 changeNavbarActive(navbarStream);
-                streamHeader.innerHTML = "Stream view";
-                appendElementToApp(streamHeader);
                 appendElementToApp(navbarElement);
+                // Add video stream
+                appendElementToApp(streamElement);
+                //Add items to the data wrap
+                appendElementToApp(dataDropdown, dataWrap);
+                appendElementToApp(dataBoxes, dataWrap);
+                //add two boxes to dataBoxes
+                appendElementToApp(dataBoxRobots, dataBoxes);
+                appendElementToApp(dataBoxBarriers, dataBoxes);
+                //Append data wrap to the app root element
+                appendElementToApp(dataWrap);
+
+                //video player logic
+                if (flvjs.isSupported()) {
+                    var videoElement = document.getElementById('videoElement');
+                    var flvPlayer = flvjs.createPlayer({
+                        type: 'flv',
+                        url: appState.selectedStream
+                    });
+                    flvPlayer.attachMediaElement(videoElement);
+                    // If there is any issue we'll tell the user
+                    flvPlayer.on(flvjs.Events.ERROR, () => {
+                        streamElement.setAttribute("poster", "img/streamError.png");
+                    });
+                    flvPlayer.load();
+                    flvPlayer.play();
+                } else {
+                    alert("Error loading video stream player");
+                }
+
                 break;
             // ROBOTS VIEW
             case "robots":
