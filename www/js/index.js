@@ -130,10 +130,8 @@
                 dataBoxBarriers.innerHTML = "<h2>4</h2><span>Barriers</span>";
                 dataDropdown.innerHTML = "<select><option>Camera 1</option></select>";
 
-                //change navbar active state, add navbar & header
+                //change navbar active state and add the navbar
                 changeNavbarActive(navbarStream);
-                streamHeader.innerHTML = "Stream view";
-                appendElementToApp(streamHeader);
                 appendElementToApp(navbarElement);
                 // Add video stream
                 appendElementToApp(streamElement);
