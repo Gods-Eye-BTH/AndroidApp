@@ -19,11 +19,18 @@
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="hdpi" src="res/icon/android/icon.png" />
+        <splash density="port-hdpi" src="res/screen/android/SplashScreen.png" />
+        <preference name="AutoHideSplashScreen" value="true" />
+        <preference name="SplashScreenDelay" value="2000" />
+        <preference name="FadeSplashScreen" value="true" />
+        <preference name="FadeSplashScreenDuration" value="500" />
+        <preference name="ShowSplashScreenSpinner" value="false" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <engine name="android" spec="7.1.1" />
     <engine name="browser" spec="5.0.4" />
 </widget>
