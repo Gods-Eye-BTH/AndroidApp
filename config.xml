@@ -19,9 +19,9 @@
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="hdpi" src="res/icon/android/icon.png" />
-        <splash density="port-hdpi" src="res/screen/android/SplashScreen.png" />
+        <splash src="res/screen/android/Default@3x~universal~comany.png" />
         <preference name="AutoHideSplashScreen" value="true" />
-        <preference name="SplashScreenDelay" value="2000" />
+        <preference name="SplashScreenDelay" value="3000" />
         <preference name="FadeSplashScreen" value="true" />
         <preference name="FadeSplashScreenDuration" value="500" />
         <preference name="ShowSplashScreenSpinner" value="false" />
