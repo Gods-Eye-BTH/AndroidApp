@@ -78,7 +78,7 @@
     navbarHome.innerHTML = "<i class='material-icons'>home</i><span>Home</span>";
     navbarStream.innerHTML = "<i class='material-icons'>live_tv</i><span>Stream</span>";
     navbarRobots.innerHTML = "<i class='material-icons'>memory</i><span>Robots</span>";
-    navbarBarriers.innerHTML = "<i class='material-icons'>gamepad</i><span>Barriers</span>";
+    navbarBarriers.innerHTML = "<i class='material-icons'>widgets</i><span>Barriers</span>";
 
     // Add listeners to navbar, this is used to see when user clicks on a button
     navbarHome.addEventListener('click', () => { updateState("home"); });
@@ -141,6 +141,11 @@
                 //Add click event to robots box
                 dataBoxRobots.addEventListener("click", () => {
                     updateState("robots");
+                });
+
+                //Add click event to barriers box
+                dataBoxBarriers.addEventListener("click", () => {
+                    updateState("barriers");
                 });
 
                 //Fetch amount of barriers
