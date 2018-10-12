@@ -5,22 +5,31 @@
     // this should remain static
     const config = {
         apiBaseURL: 'http://cluster.dystopi.nu/api/',
-        streams: {
-            camera1: 'http://cluster.dystopi.nu/stream/eye.flv',
-            camera2: 'http://cluster.dystopi.nu/stream/truesurvivor.flv'
-        }
+        streams: [
+            {
+                id: 0,
+                name: "Camera 1: Charlie Chaplin",
+                url: 'http://cluster.dystopi.nu/stream/eye.flv'
+            },
+            {
+                id: 1,
+                name: "Camera 2: True Survivor Music Video",
+                url: 'http://cluster.dystopi.nu/stream/truesurvivor.flv'
+            }
+        ]
     }
 
     // This is the root DOM Element - everything should be within this.
     let appElement = document.getElementById("app");
     // AppState tells the app what states are set.
     // state: What view should be displayed to the user
-    // selectedStream: url to stream that the user has selected.
+    // SelectedSteam: The selected option in the selected option box
+    // selectedStreamUrl: url to stream that the user has selected.
     // selectedRobot: id of the robot the user has selected.
     let appState = {
         state: "home",
-        selectedStream: config.streams.camera1,
-        selectedRobot: "",
+        selectedStream: 0,
+        selectedStreamUrl: config.streams[0].url,
         showRobotID: 0,
     };
 
@@ -157,14 +166,33 @@
                     "</h2><span>Barriers</span>";
                 });
 
-                //add data to databoxes
+                //Select a camera feed
                 let selectMenu = createElement("select");
-                let optChaplin = createElement("option");
 
-                optChaplin.name = "chaplin";
-                optChaplin.innerText = "Camera 1";
+                //Add Camera feed options
+                config.streams.forEach((stream) => {
+                    let feedOption = createElement("option");
+                    if (appState.selectedStream == stream.id) {
+                        feedOption.setAttribute("selected", "selected");
+                    }
+                    feedOption.innerText = stream.name;
+                    feedOption.value = stream.id;
+                    //When the user clicks on the option we
+                    //re-render the view with updated stream url
+                    feedOption.addEventListener("click", () => {
+                        appState.selectedStream = stream.id;
+                        appState.selectedStreamUrl = stream.url;
+                        updateState("stream");
+                    });
+                    appendElementToApp(feedOption, selectMenu);
+                });
 
-                appendElementToApp(optChaplin, selectMenu);
+                //add trigger for changing stream on a phone
+                selectMenu.addEventListener("change", (e) => {
+                    console.log(selectMenu.value);
+                    selectMenu.options[selectMenu.value].click();
+                });
+
                 appendElementToApp(selectMenu, dataDropdown);
 
                 //change navbar active state and add the navbar
@@ -186,7 +214,7 @@
                     var videoElement = document.getElementById('videoElement');
                     var flvPlayer = flvjs.createPlayer({
                         type: 'flv',
-                        url: appState.selectedStream
+                        url: appState.selectedStreamUrl
                     });
                     flvPlayer.attachMediaElement(videoElement);
                     // If there is any issue we'll tell the user
