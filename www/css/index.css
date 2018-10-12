@@ -11,8 +11,9 @@
     font-family: sans-serif;
 }
 
-#app {
+.application {
     font-family: sans-serif;
+    margin-bottom: 25vh;
 }
 
 .nav-wrap {
@@ -109,4 +110,52 @@
 
 .dropdownContainer select option{
     text-align: center;
+}
+
+.robot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 3vh;
+    padding-right: 3vh;
+    border-bottom: 1px solid grey;
+}
+
+.robotHeader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid grey;
+}
+
+.robotName {
+    width: fill;
+    text-align: center;
+    flex: 1;
+}
+
+.headerPadding {
+    flex:1;
+}
+
+.robotBackButton {
+    padding: 1rem 1.5rem;
+}
+
+.error {
+    margin: 8px;
+    padding: 4px;
+    text-align: center;
+    font-family: monospace;
+    background: rgba(255, 0, 0, 0.3);
+    color:darkred;
+    border-radius: 5px;
+    border-left: solid 3px darkred;
+}
+
+.barrier {
+    margin: 1rem 2rem;
+    padding: 1rem;
+    border: 1px solid rgba(100, 100, 100, .8);
+    box-shadow: 1px 1px 3px rgba(60, 60, 60, .8);
 }
