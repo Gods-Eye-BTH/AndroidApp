@@ -54,7 +54,7 @@
         navbarHome.classList.remove("active");
         navbarStream.classList.remove("active");
         navbarRobots.classList.remove("active");
-        navbarControl.classList.remove("active");
+        navbarBarriers.classList.remove("active");
 
         newActive.classList.add("active");
     }
@@ -73,24 +73,24 @@
     let navbarHome = createElement("a", "home", "link");
     let navbarStream = createElement("a", "stream", "link");
     let navbarRobots = createElement("a", "robots", "link");
-    let navbarControl = createElement("a", "control", "link");
+    let navbarBarriers = createElement("a", "barriers", "link");
 
     navbarHome.innerHTML = "<i class='material-icons'>home</i><span>Home</span>";
     navbarStream.innerHTML = "<i class='material-icons'>live_tv</i><span>Stream</span>";
     navbarRobots.innerHTML = "<i class='material-icons'>memory</i><span>Robots</span>";
-    navbarControl.innerHTML = "<i class='material-icons'>gamepad</i><span>Control</span>";
+    navbarBarriers.innerHTML = "<i class='material-icons'>gamepad</i><span>Barriers</span>";
 
     // Add listeners to navbar, this is used to see when user clicks on a button
     navbarHome.addEventListener('click', () => { updateState("home"); });
     navbarStream.addEventListener('click', () => { updateState("stream"); });
     navbarRobots.addEventListener('click', () => { updateState("robots"); });
-    navbarControl.addEventListener('click', () => { updateState("control"); });
+    navbarBarriers.addEventListener('click', () => { updateState("barriers"); });
 
     // Add navbar buttons to the actual navbar
     appendElementToApp(navbarHome, navbarElement);
     appendElementToApp(navbarStream, navbarElement);
     appendElementToApp(navbarRobots, navbarElement);
-    appendElementToApp(navbarControl, navbarElement);
+    appendElementToApp(navbarBarriers, navbarElement);
 
     /*
     * --------------------------------------------------------------------------
@@ -221,21 +221,15 @@
                         appendElementToApp(tmpElement, robotsList);
                     });
                 }).catch((error) => {
-                    console.log("Error fetching Robot data from " + config.apiBaseURL);
+                    let errorMsg = createElement("div", "error", "error");
+
+                    errorMsg.innerText = "Failed to fetch robots from " + config.apiBaseURL;
+                    appendElementToApp(errorMsg);
                 });
 
                 //append list to the app
                 appendElementToApp(robotsList);
 
-                break;
-            // ABOUT VIEW
-            case "control":
-                let aboutHeader = createElement("h1", "testheader");
-
-                changeNavbarActive(navbarControl);
-                aboutHeader.innerHTML = "Control view";
-                appendElementToApp(aboutHeader);
-                appendElementToApp(navbarElement);
                 break;
             //DISPLAY DATA FOR A ROBOT
             case "robot":
@@ -277,6 +271,41 @@
                     appendElementToApp(robotInformation);
                 });
                 break;
+                // BARRIERS VIEW
+                case "barriers":
+                    //Header
+                    let aboutHeader = createElement("h1", "BarriersHeader");
+
+                    //Update view and add header
+                    changeNavbarActive(navbarBarriers);
+                    aboutHeader.innerHTML = "Barriers";
+                    appendElementToApp(aboutHeader);
+                    appendElementToApp(navbarElement);
+
+                    //Fetch Barrier data and add them as elements
+                    fetch(config.apiBaseURL + "barriers")
+                    .then(function (response) {
+                        return response.json();
+                    }).then(function(data) {
+                        //loop the list of robots add add click event and html elements
+                        data.forEach((barrier) => {
+                            let barrierElement = createElement("div", "barrier", "barrier");
+
+                            barrierElement.innerHTML =
+                                "<h3>ID: " + barrier.id + "</h3>" +
+                                "x: " + barrier.coords[0] + "<br>" +
+                                " y: " + barrier.coords[1] + "<br>" +
+                                "size: " + barrier.size[0] + "x" + barrier.size[1];
+
+                            appendElementToApp(barrierElement);
+                        });
+                    }).catch((error) => {
+                        let errorMsg = createElement("div", "error", "error");
+
+                        errorMsg.innerText = "Failed to fetch barriers from " + config.apiBaseURL;
+                        appendElementToApp(errorMsg);
+                    });
+                    break;
             default:
                 break;
         }
