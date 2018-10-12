@@ -54,6 +54,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 25vh;
 }
 
 .boxWrap {
@@ -109,4 +110,34 @@
 
 .dropdownContainer select option{
     text-align: center;
+}
+
+.robot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 3vh;
+    padding-right: 3vh;
+    border-bottom: 1px solid grey;
+}
+
+.robotHeader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid grey;
+}
+
+.robotName {
+    width: fill;
+    text-align: center;
+    flex: 1;
+}
+
+.headerPadding {
+    flex:1;
+}
+
+.robotBackButton {
+    padding: 1rem 1.5rem;
 }

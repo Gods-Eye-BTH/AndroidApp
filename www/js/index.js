@@ -4,8 +4,13 @@
     //NOTE: This is the config variable, all default values are stored here
     // this should remain static
     const config = {
-        defaultStream: 'http://localhost:8000/live/eye.flv'
+        apiBaseURL: 'http://cluster.dystopi.nu/api/',
+        streams: {
+            camera1: 'http://cluster.dystopi.nu/stream/eye.flv',
+            camera2: 'http://cluster.dystopi.nu/stream/truesurvivor.flv'
+        }
     }
+
     // This is the root DOM Element - everything should be within this.
     let appElement = document.getElementById("app");
     // AppState tells the app what states are set.
@@ -14,8 +19,9 @@
     // selectedRobot: id of the robot the user has selected.
     let appState = {
         state: "home",
-        selectedStream: config.defaultStream,
+        selectedStream: config.streams.camera1,
         selectedRobot: "",
+        showRobotID: 0,
     };
 
     // General function to create an element
@@ -123,10 +129,38 @@
                 streamElement.setAttribute("autoplay", "");
                 streamElement.setAttribute("poster", "img/loadingStream.png");
 
+                //Fetch amount of robots
+                fetch(config.apiBaseURL + "robots")
+                .then(function (response) {
+                    return response.json();
+                }).then(function(data) {
+                    dataBoxRobots.innerHTML = "<h2>" + data.length +
+                    "</h2><span>Robots</span>";
+                });
+
+                //Add click event to robots box
+                dataBoxRobots.addEventListener("click", () => {
+                    updateState("robots");
+                });
+
+                //Fetch amount of barriers
+                fetch(config.apiBaseURL + "barriers")
+                .then(function (response) {
+                    return response.json();
+                }).then(function(data) {
+                    dataBoxBarriers.innerHTML = "<h2>" + data.length +
+                    "</h2><span>Barriers</span>";
+                });
+
                 //add data to databoxes
-                dataBoxRobots.innerHTML = "<h2>3</h2><span>Robots</span>";
-                dataBoxBarriers.innerHTML = "<h2>4</h2><span>Barriers</span>";
-                dataDropdown.innerHTML = "<select><option>Camera 1</option></select>";
+                let selectMenu = createElement("select");
+                let optChaplin = createElement("option");
+
+                optChaplin.name = "chaplin";
+                optChaplin.innerText = "Camera 1";
+
+                appendElementToApp(optChaplin, selectMenu);
+                appendElementToApp(selectMenu, dataDropdown);
 
                 //change navbar active state and add the navbar
                 changeNavbarActive(navbarStream);
@@ -163,12 +197,36 @@
                 break;
             // ROBOTS VIEW
             case "robots":
-                let robotsHeader = createElement("h1", "testheader");
-
                 changeNavbarActive(navbarRobots);
-                robotsHeader.innerHTML = "Robots view";
-                appendElementToApp(robotsHeader);
                 appendElementToApp(navbarElement);
+
+                //Create the list that will contain the robots
+                let robotsList = createElement("div", "robotsList", "robotsList");
+
+                //Fetch robots and append them to the list
+                fetch(config.apiBaseURL + "robots")
+                .then(function (response) {
+                    return response.json();
+                }).then(function(data) {
+                    //loop the list of robots add add click event and html elements
+                    data.forEach((aRobot) => {
+                        let tmpElement = createElement("div", aRobot.name, "robot");
+
+                        tmpElement.innerHTML = "<h2>" + aRobot.name + "</h1>";
+                        tmpElement.innerHTML += "<i class='material-icons'>chevron_right</i>";
+                        tmpElement.addEventListener("click", () => {
+                            appState.showRobotID = aRobot.id;
+                            updateState("robot");
+                        })
+                        appendElementToApp(tmpElement, robotsList);
+                    });
+                }).catch((error) => {
+                    console.log("Error fetching Robot data from " + config.apiBaseURL);
+                });
+
+                //append list to the app
+                appendElementToApp(robotsList);
+
                 break;
             // ABOUT VIEW
             case "control":
@@ -178,6 +236,46 @@
                 aboutHeader.innerHTML = "Control view";
                 appendElementToApp(aboutHeader);
                 appendElementToApp(navbarElement);
+                break;
+            //DISPLAY DATA FOR A ROBOT
+            case "robot":
+                changeNavbarActive(navbarRobots);
+                appendElementToApp(navbarElement);
+
+                //Create a header for this view
+                let robotHeaderElement = createElement("div", "", "robotHeader");
+                let headerBackButton = createElement("div", "", "robotBackButton");
+                let headerPadding = createElement("div", "", "headerPadding");
+
+                //Back button to go back to robots view
+                headerBackButton.innerHTML = "<i class='material-icons'>chevron_left</i>";
+                headerBackButton.addEventListener("click", () => {
+                    updateState("robots");
+                });
+                appendElementToApp(headerBackButton, robotHeaderElement);
+                //Fetch robot data for robot appState.showRobotID
+                fetch(config.apiBaseURL + "/robot/" + appState.showRobotID)
+                .then(function (response) {
+                    return response.json();
+                }).then(function(data) {
+                    let robotName = createElement("h2", "", "robotName");
+                    robotName.innerText = data.name;
+
+                    //Parse and print data for the robot
+                    let robotInformation = createElement("div", "", "robotInformation");
+                    robotInformation.innerHTML = "<pre>" +
+                    "ID: " + data.id + "<br>" +
+                    "name: " + data.name + "<br>" +
+                    "x: " + data.coords[0] + "<br>" +
+                    "y: " + data.coords[1] + "<br>" +
+                    "length: " + data.size[0] + "<br>" +
+                    "width: " + data.size[1] + "</pre>";
+
+                    appendElementToApp(robotName, robotHeaderElement);
+                    appendElementToApp(headerPadding);
+                    appendElementToApp(robotHeaderElement);
+                    appendElementToApp(robotInformation);
+                });
                 break;
             default:
                 break;
