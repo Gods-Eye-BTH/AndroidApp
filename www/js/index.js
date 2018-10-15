@@ -1,6 +1,15 @@
 "use strict";
 
 (function () {
+    //IGNORE: CORDOVA SPECIFIC INIT FOR STATUS BAR
+    document.addEventListener("deviceready", () => {
+        if (cordova.platformId == 'android') {
+            StatusBar.backgroundColorByHexString("#57606f");
+        }
+    }, false);
+
+
+
     //NOTE: This is the config variable, all default values are stored here
     // this should remain static
     const config = {
@@ -34,11 +43,15 @@
     };
 
     // General function to create an element
-    const createElement = (type, idAttribute, classAttribute = "") => {
+    const createElement = (type, idAttribute = "", classAttribute = "") => {
         let newElement = document.createElement(type);
 
-        newElement.id = idAttribute;
-        newElement.className = classAttribute;
+        if (idAttribute != "") {
+            newElement.id = idAttribute;
+        }
+        if (classAttribute != "") {
+            newElement.className = classAttribute;
+        }
         return newElement;
     }
 
@@ -114,18 +127,43 @@
 
         // Switch case for what to draw
         switch (appState.state) {
-            // HOME VIEW
+            /*
+            * ------------------------------------------------------------------
+            * HOME VIEW
+            * ------------------------------------------------------------------
+            */
             case "home":
-                let homeHeader = createElement("h1", "testheader");
-
+                //Set navbar state to Home then draw it
                 changeNavbarActive(navbarHome);
-                homeHeader.innerHTML = "Home view";
-                appendElementToApp(homeHeader);
                 appendElementToApp(navbarElement);
+
+                //Header for H9ome view
+                let homeHeader = createElement("div", "", "homeHeader");
+                let homeImage = createElement("img", "", "homeBanner");
+                let homeText = createElement("p", "", "homeText");
+
+
+                homeImage.setAttribute("src", "img/banner.png");
+                homeText.innerText =
+`Welcome to God's Eye, a system for monitoring autonomous robots and obstacles they may face. This app can give you an overview of the scene with help of a live stream from the overhead camera, robot overview, and obstacle positions.
+
+Click an item in the navbar to get started.
+`;
+
+                appendElementToApp(homeImage, homeHeader);
+                appendElementToApp(homeHeader);
+                appendElementToApp(homeText);
                 break;
-            // STREAM VIEW
+            /*
+            * ------------------------------------------------------------------
+            * STREAM VIEW
+            * ------------------------------------------------------------------
+            */
             case "stream":
-                let streamHeader = createElement("h1", "testheader");
+                //change navbar active state and add the navbar
+                changeNavbarActive(navbarStream);
+                appendElementToApp(navbarElement);
+
                 let streamElement = createElement("video", "videoElement");
                 let dataWrap = createElement("div", "dataBoxWrap", "boxContainer");
                 let dataDropdown = createElement("div", "dropdownContainer", "dropdownContainer");
@@ -145,17 +183,21 @@
                 }).then(function(data) {
                     dataBoxRobots.innerHTML = "<h2>" + data.length +
                     "</h2><span>Robots</span>";
+                    //Add click event to robots box
+                    dataBoxRobots.addEventListener("click", () => {
+                        updateState("robots");
+                    });
+                    //Add the box to the wrapper
+                    appendElementToApp(dataBoxRobots, dataBoxes);
+                }).catch((error) => {
+                    // Data could not be fetched, print error message instead
+                    let errorMsg = createElement("div", "error", "error");
+
+                    errorMsg.innerText = "Failed to fetch robots from " + config.apiBaseURL;
+                    appendElementToApp(errorMsg);
                 });
 
-                //Add click event to robots box
-                dataBoxRobots.addEventListener("click", () => {
-                    updateState("robots");
-                });
 
-                //Add click event to barriers box
-                dataBoxBarriers.addEventListener("click", () => {
-                    updateState("barriers");
-                });
 
                 //Fetch amount of barriers
                 fetch(config.apiBaseURL + "barriers")
@@ -164,6 +206,18 @@
                 }).then(function(data) {
                     dataBoxBarriers.innerHTML = "<h2>" + data.length +
                     "</h2><span>Barriers</span>";
+                    //Add click event to barriers box
+                    dataBoxBarriers.addEventListener("click", () => {
+                        updateState("barriers");
+                    });
+                    //Add the box to the wrapper
+                    appendElementToApp(dataBoxBarriers, dataBoxes);
+                }).catch((error) => {
+                    // Data could not be fetched, print error message instead
+                    let errorMsg = createElement("div", "error", "error");
+
+                    errorMsg.innerText = "Failed to fetch robots from " + config.apiBaseURL;
+                    appendElementToApp(errorMsg);
                 });
 
                 //Select a camera feed
@@ -195,17 +249,11 @@
 
                 appendElementToApp(selectMenu, dataDropdown);
 
-                //change navbar active state and add the navbar
-                changeNavbarActive(navbarStream);
-                appendElementToApp(navbarElement);
                 // Add video stream
                 appendElementToApp(streamElement);
                 //Add items to the data wrap
                 appendElementToApp(dataDropdown, dataWrap);
                 appendElementToApp(dataBoxes, dataWrap);
-                //add two boxes to dataBoxes
-                appendElementToApp(dataBoxRobots, dataBoxes);
-                appendElementToApp(dataBoxBarriers, dataBoxes);
                 //Append data wrap to the app root element
                 appendElementToApp(dataWrap);
 
@@ -228,10 +276,22 @@
                 }
 
                 break;
-            // ROBOTS VIEW
+            /*
+            * ------------------------------------------------------------------
+            * ROBOTS VIEW
+            * ------------------------------------------------------------------
+            */
             case "robots":
                 changeNavbarActive(navbarRobots);
                 appendElementToApp(navbarElement);
+
+                //Header for Robots
+                let robotsHeader = createElement("div", "", "viewHeader");
+                let robotsOneHeader = createElement("h1", "", "robotsOneHeader");
+
+                robotsOneHeader.innerText = "Robots";
+                appendElementToApp(robotsOneHeader, robotsHeader);
+                appendElementToApp(robotsHeader);
 
                 //Create the list that will contain the robots
                 let robotsList = createElement("div", "robotsList", "robotsList");
@@ -245,7 +305,7 @@
                     data.forEach((aRobot) => {
                         let tmpElement = createElement("div", aRobot.name, "robot");
 
-                        tmpElement.innerHTML = "<h2>" + aRobot.name + "</h1>";
+                        tmpElement.innerHTML = "<h2>" + aRobot.name + "</h2>";
                         tmpElement.innerHTML += "<i class='material-icons'>chevron_right</i>";
                         tmpElement.addEventListener("click", () => {
                             appState.showRobotID = aRobot.id;
@@ -264,7 +324,11 @@
                 appendElementToApp(robotsList);
 
                 break;
-            //DISPLAY DATA FOR A ROBOT
+            /*
+            * ------------------------------------------------------------------
+            * ROBOT VIEW
+            * ------------------------------------------------------------------
+            */
             case "robot":
                 changeNavbarActive(navbarRobots);
                 appendElementToApp(navbarElement);
@@ -285,7 +349,7 @@
                 .then(function (response) {
                     return response.json();
                 }).then(function(data) {
-                    let robotName = createElement("h2", "", "robotName");
+                    let robotName = createElement("h1", "", "robotName");
                     robotName.innerText = data.name;
 
                     //Parse and print data for the robot
@@ -299,47 +363,53 @@
                     "width: " + data.size[1] + "</pre>";
 
                     appendElementToApp(robotName, robotHeaderElement);
-                    appendElementToApp(headerPadding);
                     appendElementToApp(robotHeaderElement);
                     appendElementToApp(robotInformation);
                 });
                 break;
-                // BARRIERS VIEW
-                case "barriers":
-                    //Header
-                    let aboutHeader = createElement("h1", "BarriersHeader");
+            /*
+            * ------------------------------------------------------------------
+            * BARRIERS VIEW
+            * ------------------------------------------------------------------
+            */
+            case "barriers":
+                changeNavbarActive(navbarBarriers);
+                appendElementToApp(navbarElement);
 
-                    //Update view and add header
-                    changeNavbarActive(navbarBarriers);
-                    aboutHeader.innerHTML = "Barriers";
-                    appendElementToApp(aboutHeader);
-                    appendElementToApp(navbarElement);
+                //Header for Barriers
+                let barriersHeader = createElement("div", "", "viewHeader");
+                let barriersOneHeader = createElement("h1", "", "SizeOneHeader");
 
-                    //Fetch Barrier data and add them as elements
-                    fetch(config.apiBaseURL + "barriers")
-                    .then(function (response) {
-                        return response.json();
-                    }).then(function(data) {
-                        //loop the list of robots add add click event and html elements
-                        data.forEach((barrier) => {
-                            let barrierElement = createElement("div", "barrier", "barrier");
+                barriersOneHeader.innerText = "Barriers";
+                appendElementToApp(barriersOneHeader, barriersHeader);
+                appendElementToApp(barriersHeader);
 
-                            barrierElement.innerHTML =
-                                "<h3>ID: " + barrier.id + "</h3>" +
-                                "x: " + barrier.coords[0] + "<br>" +
-                                " y: " + barrier.coords[1] + "<br>" +
-                                "size: " + barrier.size[0] + "x" + barrier.size[1];
+                //Fetch Barrier data and add them as elements
+                fetch(config.apiBaseURL + "barriers")
+                .then(function (response) {
+                    return response.json();
+                }).then(function(data) {
+                    //Itterate barriers and add them to the view
+                    data.forEach((barrier) => {
+                        let barrierElement = createElement("div", "barrier", "barrier");
 
-                            appendElementToApp(barrierElement);
-                        });
-                    }).catch((error) => {
-                        let errorMsg = createElement("div", "error", "error");
+                        barrierElement.innerHTML =
+                            "<h3>ID: " + barrier.id + "</h3>" +
+                            "x: " + barrier.coords[0] + "<br>" +
+                            " y: " + barrier.coords[1] + "<br>" +
+                            "size: " + barrier.size[0] + "x" + barrier.size[1];
 
-                        errorMsg.innerText = "Failed to fetch barriers from " + config.apiBaseURL;
-                        appendElementToApp(errorMsg);
+                        appendElementToApp(barrierElement);
                     });
-                    break;
+                }).catch((error) => {
+                    let errorMsg = createElement("div", "error", "error");
+
+                    errorMsg.innerText = "Failed to fetch barriers from " + config.apiBaseURL;
+                    appendElementToApp(errorMsg);
+                });
+                break;
             default:
+                updateState("home");
                 break;
         }
     }
