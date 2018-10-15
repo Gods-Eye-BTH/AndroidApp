@@ -305,7 +305,7 @@ Click an item in the navbar to get started.
                     data.forEach((aRobot) => {
                         let tmpElement = createElement("div", aRobot.name, "robot");
 
-                        tmpElement.innerHTML = "<h2>" + aRobot.name + "</h1>";
+                        tmpElement.innerHTML = "<h2>" + aRobot.name + "</h2>";
                         tmpElement.innerHTML += "<i class='material-icons'>chevron_right</i>";
                         tmpElement.addEventListener("click", () => {
                             appState.showRobotID = aRobot.id;
