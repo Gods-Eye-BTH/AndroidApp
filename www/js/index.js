@@ -174,17 +174,21 @@ Click an item in the navbar to get started.
                 }).then(function(data) {
                     dataBoxRobots.innerHTML = "<h2>" + data.length +
                     "</h2><span>Robots</span>";
+                    //Add click event to robots box
+                    dataBoxRobots.addEventListener("click", () => {
+                        updateState("robots");
+                    });
+                    //Add the box to the wrapper
+                    appendElementToApp(dataBoxRobots, dataBoxes);
+                }).catch((error) => {
+                    // Data could not be fetched, print error message instead
+                    let errorMsg = createElement("div", "error", "error");
+
+                    errorMsg.innerText = "Failed to fetch robots from " + config.apiBaseURL;
+                    appendElementToApp(errorMsg);
                 });
 
-                //Add click event to robots box
-                dataBoxRobots.addEventListener("click", () => {
-                    updateState("robots");
-                });
 
-                //Add click event to barriers box
-                dataBoxBarriers.addEventListener("click", () => {
-                    updateState("barriers");
-                });
 
                 //Fetch amount of barriers
                 fetch(config.apiBaseURL + "barriers")
@@ -193,6 +197,18 @@ Click an item in the navbar to get started.
                 }).then(function(data) {
                     dataBoxBarriers.innerHTML = "<h2>" + data.length +
                     "</h2><span>Barriers</span>";
+                    //Add click event to barriers box
+                    dataBoxBarriers.addEventListener("click", () => {
+                        updateState("barriers");
+                    });
+                    //Add the box to the wrapper
+                    appendElementToApp(dataBoxBarriers, dataBoxes);
+                }).catch((error) => {
+                    // Data could not be fetched, print error message instead
+                    let errorMsg = createElement("div", "error", "error");
+
+                    errorMsg.innerText = "Failed to fetch robots from " + config.apiBaseURL;
+                    appendElementToApp(errorMsg);
                 });
 
                 //Select a camera feed
@@ -229,9 +245,6 @@ Click an item in the navbar to get started.
                 //Add items to the data wrap
                 appendElementToApp(dataDropdown, dataWrap);
                 appendElementToApp(dataBoxes, dataWrap);
-                //add two boxes to dataBoxes
-                appendElementToApp(dataBoxRobots, dataBoxes);
-                appendElementToApp(dataBoxBarriers, dataBoxes);
                 //Append data wrap to the app root element
                 appendElementToApp(dataWrap);
 
