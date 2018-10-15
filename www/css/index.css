@@ -5,14 +5,9 @@
     user-select: none;
 }
 
- /* TODO: REMOVE TESTHEADER AND USE A BETTER ID/CLASS */
-#testheader {
-    color: #182C61;
-    font-family: sans-serif;
-}
-
 .application {
-    font-family: sans-serif;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 300;
     margin-bottom: 25vh;
 }
 
@@ -21,7 +16,7 @@
     bottom: 0;
     overflow: hidden;
     width: 100%;
-    background: #2C3A47;
+    background: #57606f;
     list-style: none;
     padding: 0;
     display: flex;
@@ -31,7 +26,7 @@
 
 .nav-wrap .link {
     width: 25%;
-    padding: 1em 0;
+    padding: 0.8em 0;
     cursor: pointer;
     text-decoration: none;
     color: #fff;
@@ -42,7 +37,29 @@
 }
 
 .active {
-    background: #182C61;
+    background: #2f3542;
+}
+
+.viewHeader {
+    text-align: center;
+    border-bottom: 1px solid rgba(164, 176, 190, 0.8);
+    margin: 0;
+    padding: 0;
+}
+
+.homeHeader {
+    text-align: center;
+    margin: 0;
+    padding-top: 4vh;
+    padding-bottom: 4vh;
+}
+
+.homeBanner {
+    height: 90px;
+}
+
+.homeText {
+    padding: 2rem 1rem 1rem 1rem;
 }
 
 #videoElement {
@@ -71,7 +88,7 @@
     flex-direction: column;
     padding: 1em 0;
     align-items: center;
-    background: #1e90ff;
+    background: #57606f;
     color: #fff;
 }
 
@@ -101,11 +118,13 @@
 .dropdownContainer select{
     margin: 3px auto;
     width: 96.5%;
-    padding: 10px auto;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
     text-align: center;
-    border: 2px solid #999;
+    border: 1px solid #747d8c;
+    border-radius: 3px;
     background: #fff;
-    color: #999;
+    color: #000;
 }
 
 .dropdownContainer select option{
@@ -118,14 +137,18 @@
     justify-content: space-between;
     padding-left: 3vh;
     padding-right: 3vh;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid rgba(164, 176, 190, 0.8);
+}
+
+.robot:hover, .robot:focus {
+    background: rgba(164, 176, 190, 0.8);
 }
 
 .robotHeader {
     width: 100%;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid rgba(164, 176, 190, 0.8);
 }
 
 .robotName {
@@ -134,12 +157,16 @@
     flex: 1;
 }
 
-.headerPadding {
-    flex:1;
+.robotBackButton {
+    float: left;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
 }
 
-.robotBackButton {
-    padding: 1rem 1.5rem;
+.robotInformation {
+    padding: 0 1rem;
 }
 
 .error {
@@ -147,15 +174,16 @@
     padding: 4px;
     text-align: center;
     font-family: monospace;
-    background: rgba(255, 0, 0, 0.3);
-    color:darkred;
+    background: #f8d7da;
+    color:#721c24;
     border-radius: 5px;
-    border-left: solid 3px darkred;
+    border-left: solid 4px #721c24;
 }
 
 .barrier {
-    margin: 1rem 2rem;
-    padding: 1rem;
-    border: 1px solid rgba(100, 100, 100, .8);
-    box-shadow: 1px 1px 3px rgba(60, 60, 60, .8);
+    margin: 1rem 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    border: 1px solid rgba(164, 176, 190, 0.5);
+    box-shadow: 1px 1px 5px rgba(134, 142, 152, 0.5);
 }
