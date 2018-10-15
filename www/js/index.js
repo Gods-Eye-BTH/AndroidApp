@@ -1,6 +1,15 @@
 "use strict";
 
 (function () {
+    //IGNORE: CORDOVA SPECIFIC INIT FOR STATUS BAR
+    document.addEventListener("deviceready", () => {
+        if (cordova.platformId == 'android') {
+            StatusBar.backgroundColorByHexString("#57606f");
+        }
+    }, false);
+
+
+
     //NOTE: This is the config variable, all default values are stored here
     // this should remain static
     const config = {
