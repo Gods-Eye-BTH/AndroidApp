@@ -349,7 +349,7 @@ Click an item in the navbar to get started.
                 .then(function (response) {
                     return response.json();
                 }).then(function(data) {
-                    let robotName = createElement("h2", "", "robotName");
+                    let robotName = createElement("h1", "", "robotName");
                     robotName.innerText = data.name;
 
                     //Parse and print data for the robot
