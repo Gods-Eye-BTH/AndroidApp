@@ -13,17 +13,17 @@
     //NOTE: This is the config variable, all default values are stored here
     // this should remain static
     const config = {
-        apiBaseURL: 'http://cluster.dystopi.nu/api/',
+        apiBaseURL: 'https://cluster.dystopi.nu/api/',
         streams: [
             {
                 id: 0,
                 name: "Camera 1: Charlie Chaplin",
-                url: 'http://cluster.dystopi.nu/stream/eye.flv'
+                url: 'https://cluster.dystopi.nu/stream/eye.flv'
             },
             {
                 id: 1,
                 name: "Camera 2: True Survivor Music Video",
-                url: 'http://cluster.dystopi.nu/stream/truesurvivor.flv'
+                url: 'https://cluster.dystopi.nu/stream/truesurvivor.flv'
             }
         ]
     }
