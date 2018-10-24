@@ -357,10 +357,10 @@ Click an item in the navbar to get started.
                     robotInformation.innerHTML = "<pre>" +
                     "ID: " + data.id + "<br>" +
                     "name: " + data.name + "<br>" +
-                    "x: " + data.coords[0] + "<br>" +
-                    "y: " + data.coords[1] + "<br>" +
-                    "length: " + data.size[0] + "<br>" +
-                    "width: " + data.size[1] + "</pre>";
+                    "x: " + data.x + "<br>" +
+                    "y: " + data.y + "<br>" +
+                    "width: " + data.width + "<br>" +
+                    "height: " + data.height + "</pre>";
 
                     appendElementToApp(robotName, robotHeaderElement);
                     appendElementToApp(robotHeaderElement);
@@ -395,9 +395,9 @@ Click an item in the navbar to get started.
 
                         barrierElement.innerHTML =
                             "<h3>ID: " + barrier.id + "</h3>" +
-                            "x: " + barrier.coords[0] + "<br>" +
-                            " y: " + barrier.coords[1] + "<br>" +
-                            "size: " + barrier.size[0] + "x" + barrier.size[1];
+                            "x: " + barrier.x + "<br>" +
+                            " y: " + barrier.y + "<br>" +
+                            "size: " + barrier.width + "x" + barrier.height;
 
                         appendElementToApp(barrierElement);
                     });
